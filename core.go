@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/url"
 )
@@ -60,13 +61,13 @@ type PatchSupported interface {
 // You can instantiate multiple APIs on separate ports. Each API
 // will manage its own set of resources.
 type API struct {
-	mux     *http.ServeMux
+	mux            *mux.Router
 	muxInitialized bool
 }
 
 // NewAPI allocates and returns a new API.
 func NewAPI() *API {
-	return &API{}
+	return &API{mux: mux.NewRouter()}
 }
 
 func (api *API) requestHandler(resource interface{}) http.HandlerFunc {
@@ -130,11 +131,11 @@ func (api *API) requestHandler(resource interface{}) http.HandlerFunc {
 
 // Mux returns the http.ServeMux used by an API. If a ServeMux has
 // does not yet exist, a new one will be created and returned.
-func (api *API) Mux() *http.ServeMux {
+func (api *API) Mux() *mux.Router {
 	if api.muxInitialized {
 		return api.mux
 	} else {
-		api.mux = http.NewServeMux()
+		api.mux = mux.NewRouter()
 		api.muxInitialized = true
 		return api.mux
 	}

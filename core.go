@@ -1,6 +1,8 @@
 package sleepy
 
 import (
+	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -111,13 +113,25 @@ func (api *API) requestHandler(resource interface{}) http.HandlerFunc {
 			return
 		}
 
+		var content []byte
+		var err error
 		code, data, header := handler(&rw, request)
 
-		content, err := json.MarshalIndent(data, "", "  ")
-		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
+		switch data.(type) {
+		case string:
+			content, err = getBytes(data)
+			if err != nil {
+				rw.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+		default:
+			content, err = json.MarshalIndent(data, "", "  ")
+			if err != nil {
+				rw.WriteHeader(http.StatusInternalServerError)
+				return
+			}
 		}
+
 		for name, values := range header {
 			for _, value := range values {
 				rw.Header().Add(name, value)
@@ -165,4 +179,14 @@ func (api *API) Start(port int) error {
 	}
 	portString := fmt.Sprintf(":%d", port)
 	return http.ListenAndServe(portString, api.Mux())
+}
+
+func getBytes(key interface{}) ([]byte, error) {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	err := enc.Encode(key)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }

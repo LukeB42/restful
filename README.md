@@ -1,7 +1,5 @@
 ## Restful
 
-#### A Gorilla-based fork of Sleepy for Go
-
 Restful is a drop-in library for RESTful APIs.
 
 ```go

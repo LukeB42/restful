@@ -1,8 +1,8 @@
-## Sleepy
+## Restful
 
-#### A RESTful framework for Go
+#### A Gorilla-based fork of Sleepy for Go
 
-Sleepy is a micro-framework for building RESTful APIs.
+Restful is a drop-in library for RESTful APIs.
 
 ```go
 package main
@@ -10,9 +10,10 @@ package main
 import (
     "net/url"
     "net/http"
-    "github.com/dougblack/sleepy"
+    "github.com/LukeB42/restful"
 )
 
+// Create something to bind our HTTP verb-methods to
 type Item struct { }
 
 func (item Item) Get(values url.Values, headers http.Header) (int, interface{}, http.Header) {
@@ -37,13 +38,11 @@ $ curl localhost:3000/items
 {"items": ["item1", "item2"]}
 ```
 
-`sleepy` has not been officially released yet, as it is still in active
-development.
 
-## Docs
+## Credits
 
-Documentation lives [here](http://godoc.org/github.com/dougblack/sleepy).
+Cheers to Doug Black for the original Sleepy code.
 
 ## License
 
-`sleepy` is released under the [MIT License](http://opensource.org/licenses/MIT).
+`restful` is released under the [MIT License](http://opensource.org/licenses/MIT).

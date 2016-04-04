@@ -1,4 +1,4 @@
-package sleepy
+package restful
 
 import (
 	"bytes"

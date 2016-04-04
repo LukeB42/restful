@@ -36,7 +36,7 @@ func (item Item) Get(rw *http.ResponseWriter, request *http.Request) (int, inter
 func main() {
     item := new(Item)
 
-    api := sleepy.NewAPI()
+    api := restful.NewAPI()
     api.AddResource(item, "/items")
     api.AddResource(item, "/items/{name}")
     api.Start(":3000", os.Stdout)

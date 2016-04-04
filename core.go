@@ -5,8 +5,9 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"io"
 	"net/http"
 )
 
@@ -64,11 +65,12 @@ type PatchSupported interface {
 type API struct {
 	mux            *mux.Router
 	muxInitialized bool
+	logger         func(out io.Writer, h http.Handler) http.Handler
 }
 
 // NewAPI allocates and returns a new API.
 func NewAPI() *API {
-	return &API{mux: mux.NewRouter()}
+	return &API{mux: mux.NewRouter(), logger: handlers.LoggingHandler}
 }
 
 func (api *API) requestHandler(resource interface{}) http.HandlerFunc {
@@ -173,12 +175,14 @@ func (api *API) AddResourceWithWrapper(resource interface{}, wrapper func(handle
 }
 
 // Start causes the API to begin serving requests on the given port.
-func (api *API) Start(port int) error {
+func (api *API) Start(address string, logfile io.Writer) error {
 	if !api.muxInitialized {
 		return errors.New("You must add at least one resource to this API.")
 	}
-	portString := fmt.Sprintf(":%d", port)
-	return http.ListenAndServe(portString, api.Mux())
+
+	// Log requests in Apache format
+	loggedRouter := api.logger(logfile, api.Mux())
+	return http.ListenAndServe(address, loggedRouter)
 }
 
 func getBytes(key interface{}) ([]byte, error) {

@@ -2,6 +2,12 @@
 
 Restful is a drop-in library for RESTful APIs.
 
+```bash
+go get github.com/gorilla/mux
+go get github.com/gorilla/handlers
+```
+
+
 ```go
 package main
 
@@ -10,6 +16,7 @@ import (
     "github.com/gorilla/mux"
     "github.com/LukeB42/restful"
     "net/http"
+    "os"
 )
 
 // Create something to bind our HTTP verb-methods to
@@ -32,7 +39,7 @@ func main() {
     api := sleepy.NewAPI()
     api.AddResource(item, "/items")
     api.AddResource(item, "/items/{name}")
-    api.Start(3000)
+    api.Start(":3000", os.Stdout)
 }
 ```
 

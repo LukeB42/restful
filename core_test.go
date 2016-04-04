@@ -3,6 +3,7 @@ package sleepy
 import (
 	"io/ioutil"
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -20,7 +21,7 @@ func TestBasicGet(t *testing.T) {
 
 	var api = NewAPI()
 	api.AddResource(item, "/items", "/bar", "/baz")
-	go api.Start(3000)
+	go api.Start(":3000", os.Stdout)
 	resp, err := http.Get("http://localhost:3000/items")
 	if err != nil {
 		t.Error(err)

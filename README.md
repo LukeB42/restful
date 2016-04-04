@@ -8,18 +8,24 @@ Restful is a drop-in library for RESTful APIs.
 package main
 
 import (
-    "net/url"
-    "net/http"
+    "fmt"
+    "github.com/gorilla/mux"
     "github.com/LukeB42/restful"
+    "net/http"
 )
 
 // Create something to bind our HTTP verb-methods to
 type Item struct { }
 
-func (item Item) Get(values url.Values, headers http.Header) (int, interface{}, http.Header) {
-    items := []string{"item1", "item2"}
-    data := map[string][]string{"items": items}
-    return 200, data, http.Header{"Content-type": {"application/json"}}
+func (item Item) Get(rw *http.ResponseWriter, request *http.Request) (int, interface{}, http.Header) {
+	vars := mux.Vars(request)
+	if name, ok := vars["name"]; ok {
+		greeting := fmt.Sprintf("Hello, %v!\n", name)
+		return 200, greeting, http.Header{"Content-Type": {"text/html"}}
+	}
+	items := []string{"item1", "item2"}
+	data := map[string][]string{"items": items}
+	return 200, data, http.Header{"Content-type": {"application/json"}}
 }
 
 func main() {
@@ -27,6 +33,7 @@ func main() {
 
     api := sleepy.NewAPI()
     api.AddResource(item, "/items")
+    api.AddResource(item, "/items/{name}")
     api.Start(3000)
 }
 ```

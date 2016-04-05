@@ -1,10 +1,6 @@
 package restful
 
 import (
-	"bytes"
-	"encoding/gob"
-	"encoding/json"
-	"errors"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"io"

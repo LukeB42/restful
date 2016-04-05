@@ -1,8 +1,9 @@
 ## Restful
 
-Restful is a drop-in library for RESTful APIs.
+Gorilla-based drop-in library for RESTful APIs.
 
 ```bash
+go get github.com/LukeB42/restful
 go get github.com/gorilla/mux
 go get github.com/gorilla/handlers
 ```
@@ -53,7 +54,7 @@ $ curl localhost:3000/items
 
 ## Credits
 
-Cheers to Doug Black for the original Sleepy code.
+Based on [Sleepy](https://github.com/dougblack/sleepy) by Doug Black.
 
 ## License
 
